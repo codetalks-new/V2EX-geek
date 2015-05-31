@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.banxi1988.v2exgeek.R;
 import com.banxi1988.v2exgeek.api.ApiServiceManager;
 import com.banxi1988.v2exgeek.model.Topic;
 import com.squareup.okhttp.Response;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -106,14 +108,17 @@ public class TopicListFragment extends Fragment {
     }
 }
 class TopicViewHolder extends RecyclerView.ViewHolder{
-    public TextView titleView;
+    private TextView titleView;
+    private ImageView avatarView;
     public TopicViewHolder(View itemView) {
         super(itemView);
         titleView = (TextView)itemView.findViewById(R.id.title);
+        avatarView = (ImageView)itemView.findViewById(R.id.avatar);
     }
 
     public void bind(Topic topic){
         titleView.setText(topic.title);
+        Picasso.with(titleView.getContext()).load("http:"+topic.member.avatar_mini).into(avatarView);
     }
 }
 
