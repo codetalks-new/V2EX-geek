@@ -1,4 +1,4 @@
-package com.banxi1988.v2ex_geek;
+package com.banxi1988.v2exgeek;
 
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;

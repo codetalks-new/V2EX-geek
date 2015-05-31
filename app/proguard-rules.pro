@@ -15,3 +15,17 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+
+### for retrofit
+-dontwarn retrofit.**
+-keep class retrofit.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+### for picasso
+-dontwarn com.squareup.okhttp.**
+
+### for Module:app
+-keep com.banxi1988.v2exgeek.model.**{ *;}
+-keep com.banxi1988.v2exgeek.api.**{ *;}

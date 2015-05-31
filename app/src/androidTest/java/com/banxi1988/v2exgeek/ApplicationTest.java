@@ -1,4 +1,4 @@
-package com.banxi1988.v2ex_geek;
+package com.banxi1988.v2exgeek;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
