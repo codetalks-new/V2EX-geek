@@ -11,12 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <com.banxi1988.v2exgeek.view.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
         android:layout_width="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:scaleType="fitCenter"
         android:layout_height="40dp" />
 
     <TextView

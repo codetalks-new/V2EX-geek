@@ -1,5 +1,6 @@
 package com.banxi1988.v2exgeek;
 
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -51,10 +52,10 @@ public class NavigationDrawerFragment extends Fragment {
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
+    private NavigationView mNavigationView;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = 0;
+    private int mCurrentSelectedPosition = R.id.navigation_item_hot;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
@@ -75,8 +76,6 @@ public class NavigationDrawerFragment extends Fragment {
             mFromSavedInstanceState = true;
         }
 
-        // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
     }
 
     @Override
@@ -89,25 +88,24 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mNavigationView = (NavigationView)inflater.inflate(R.layout.fragment_navigation_drawer,container,false);
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                selectMenuItem(menuItem);
+                return false;
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+        selectDefaultOrLastItem();
+        return mNavigationView;
+    }
+
+    private void selectDefaultOrLastItem(){
+        // Select either the default item (0) or the last selected item.
+        MenuItem menuItem = mNavigationView.getMenu().findItem(mCurrentSelectedPosition);
+        if(menuItem != null){
+            selectMenuItem(menuItem);
+        }
     }
 
     public boolean isDrawerOpen() {
@@ -188,16 +186,14 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
+    private void selectMenuItem(MenuItem menuItem) {
+        mCurrentSelectedPosition = menuItem.getItemId();
+        menuItem.setChecked(true);
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
+            mCallbacks.onNavigationDrawerItemSelected(menuItem);
         }
     }
 
@@ -277,6 +273,6 @@ public class NavigationDrawerFragment extends Fragment {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(int position);
+        void onNavigationDrawerItemSelected(MenuItem menuItem);
     }
 }

@@ -1,6 +1,8 @@
 package com.banxi1988.v2exgeek.controller;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -14,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.banxi1988.v2exgeek.MainActivity;
 import com.banxi1988.v2exgeek.R;
 import com.banxi1988.v2exgeek.api.ApiServiceManager;
 import com.banxi1988.v2exgeek.model.Topic;
@@ -22,6 +25,8 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +41,14 @@ public class TopicListFragment extends Fragment {
     public static final int TopicListAliasHot = 1;
     public static final int TopicListAliasLatest = 2;
     private int mTopicListAlias = TopicListAliasHot;
+
+    @IntDef({TOPIC_LIST_TYPE_HOT,TOPIC_LIST_TYPE_ALL,TOPIC_LIST_TYPE_LATEST})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TopicListType{}
+
+    public static final int TOPIC_LIST_TYPE_HOT = 0;
+    public static final int TOPIC_LIST_TYPE_ALL = 1;
+    public static final int TOPIC_LIST_TYPE_LATEST = 2;
 
     private static final String ARG_TOPIC_LIST_TYPE = "topic_list_type";
     private RecyclerView mRecyclerView;
@@ -78,6 +91,13 @@ public class TopicListFragment extends Fragment {
 
         loadTopicList();
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ((MainActivity) activity).onSectionAttached(
+                getArguments().getInt(ARG_TOPIC_LIST_TYPE));
     }
 
     private String currentListScope(){
