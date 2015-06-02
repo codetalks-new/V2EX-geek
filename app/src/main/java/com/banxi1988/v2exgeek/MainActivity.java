@@ -66,23 +66,23 @@ public class MainActivity extends AppCompatActivity
     private Fragment fragmentByNavigationItem(MenuItem menuItem){
         int itemId = menuItem.getItemId();
         if(itemId == R.id.navigation_item_hot){
-            return TopicListFragment.newInstance(TopicListFragment.TopicListAliasHot);
+            return TopicListFragment.newInstance(TopicListFragment.TOPIC_LIST_TYPE_HOT);
         }else if(itemId == R.id.navigation_item_latest){
-            return TopicListFragment.newInstance(TopicListFragment.TopicListAliasLatest);
+            return TopicListFragment.newInstance(TopicListFragment.TOPIC_LIST_TYPE_LATEST);
         }
         return  null;
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
+    public void onSectionAttached(int listType) {
+        switch (listType) {
+            case TopicListFragment.TOPIC_LIST_TYPE_HOT:
+                mTitle = "热门";
                 break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
+            case TopicListFragment.TOPIC_LIST_TYPE_LATEST:
+                mTitle = "最新";
                 break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
+            case TopicListFragment.TOPIC_LIST_TYPE_ALL:
+                mTitle = "全部";
                 break;
         }
     }

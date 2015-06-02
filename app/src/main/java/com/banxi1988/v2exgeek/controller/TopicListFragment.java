@@ -38,9 +38,6 @@ import retrofit.RetrofitError;
  * Created by banxi on 15/5/31.
  */
 public class TopicListFragment extends Fragment {
-    public static final int TopicListAliasHot = 1;
-    public static final int TopicListAliasLatest = 2;
-    private int mTopicListAlias = TopicListAliasHot;
 
     @IntDef({TOPIC_LIST_TYPE_HOT,TOPIC_LIST_TYPE_ALL,TOPIC_LIST_TYPE_LATEST})
     @Retention(RetentionPolicy.SOURCE)
@@ -50,11 +47,15 @@ public class TopicListFragment extends Fragment {
     public static final int TOPIC_LIST_TYPE_ALL = 1;
     public static final int TOPIC_LIST_TYPE_LATEST = 2;
 
+
+    @TopicListType
+    private int mTopicListType = TOPIC_LIST_TYPE_HOT;
+
     private static final String ARG_TOPIC_LIST_TYPE = "topic_list_type";
     private RecyclerView mRecyclerView;
     private TopicRecyclerAdapter mAdapter;
 
-    public static TopicListFragment newInstance(int typeId) {
+    public static TopicListFragment newInstance(@TopicListType int typeId) {
         TopicListFragment fragment = new TopicListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_TOPIC_LIST_TYPE, typeId);
@@ -72,7 +73,7 @@ public class TopicListFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
            if(args.containsKey(ARG_TOPIC_LIST_TYPE)){
-               mTopicListAlias = args.getInt(ARG_TOPIC_LIST_TYPE);
+               mTopicListType = args.getInt(ARG_TOPIC_LIST_TYPE);
            }
         }
         mAdapter = new TopicRecyclerAdapter(new ArrayList<Topic>());
@@ -101,7 +102,7 @@ public class TopicListFragment extends Fragment {
     }
 
     private String currentListScope(){
-        if(mTopicListAlias == TopicListAliasHot){
+        if(mTopicListType == TOPIC_LIST_TYPE_HOT){
             return "hot";
         }else{
             return "latest";
