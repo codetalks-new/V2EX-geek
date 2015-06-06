@@ -16,4 +16,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_recycler_view_binding_demo">RecyclerViewBindingDemoActivity
     </string>
+    <string name="title_activity_topic_detail">TopicDetailActivity</string>
 </resources>
