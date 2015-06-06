@@ -24,5 +24,13 @@
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <TextView android:text="@{user.memo}"
+        android:id="@+id/memo"
+        android:layout_toRightOf="@id/lastName"
+        android:layout_marginLeft="8dp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
 </layout>

@@ -10,4 +10,8 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    public String getMemo(){
+       return "Coding is Cool";
+    }
 }

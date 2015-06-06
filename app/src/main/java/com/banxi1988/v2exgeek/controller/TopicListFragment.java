@@ -1,6 +1,7 @@
 package com.banxi1988.v2exgeek.controller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.banxi1988.v2exgeek.MainActivity;
 import com.banxi1988.v2exgeek.R;
 import com.banxi1988.v2exgeek.api.ApiServiceManager;
+import com.banxi1988.v2exgeek.databinding.TopicListItemDatabindingBinding;
 import com.banxi1988.v2exgeek.model.Topic;
 import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
@@ -129,17 +131,16 @@ public class TopicListFragment extends Fragment {
     }
 }
 class TopicViewHolder extends RecyclerView.ViewHolder{
-    private TextView titleView;
-    private ImageView avatarView;
-    public TopicViewHolder(View itemView) {
-        super(itemView);
-        titleView = (TextView)itemView.findViewById(R.id.title);
-        avatarView = (ImageView)itemView.findViewById(R.id.avatar);
+    private TopicListItemDatabindingBinding mBinding;
+    public TopicViewHolder(TopicListItemDatabindingBinding binding) {
+        super(binding.getRoot());
+        mBinding = binding;
     }
 
     public void bind(Topic topic){
-        titleView.setText(topic.title);
-        Picasso.with(titleView.getContext()).load("http:"+topic.member.avatar_mini).into(avatarView);
+        mBinding.setTopic(topic);
+        Context ctx = mBinding.avatar.getContext();
+        Picasso.with(ctx).load(topic.member.getAvatar()).into(mBinding.avatar);
     }
 }
 
@@ -157,8 +158,9 @@ class TopicRecyclerAdapter extends RecyclerView.Adapter<TopicViewHolder>{
 
     @Override
     public TopicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item,parent,false);
-        return  new TopicViewHolder(itemView);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        TopicListItemDatabindingBinding binding = TopicListItemDatabindingBinding.inflate(inflater);
+        return  new TopicViewHolder(binding);
     }
 
 
