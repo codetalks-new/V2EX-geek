@@ -4,12 +4,14 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.banxi1988.v2exgeek.R;
 import com.banxi1988.v2exgeek.databinding.ActivityTopicDetailBinding;
+import com.banxi1988.v2exgeek.databinding.TopicDetailBinding;
 import com.banxi1988.v2exgeek.model.Topic;
 import com.squareup.picasso.Picasso;
 
@@ -23,8 +25,10 @@ public class TopicDetailActivity extends AppCompatActivity {
         Topic topic = getIntent().getParcelableExtra(ARG_TOPIC);
         Log.d(TAG, "onCreate topic="+topic);
         ActivityTopicDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_topic_detail);
+        TopicDetailBinding detailBinding = binding.topicDetail;
+        detailBinding.topicContent.setMovementMethod(LinkMovementMethod.getInstance());
         binding.setTopic(topic);
-        Picasso.with(this).load(topic.member.getAvatar()).into(binding.topicDetail.avatar);
+        Picasso.with(this).load(topic.member.getAvatar()).into(detailBinding.avatar);
 //        Html.fromHtml()
     }
 
