@@ -1,13 +1,16 @@
 package com.banxi1988.v2exgeek;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +19,14 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
 import com.banxi1988.v2exgeek.controller.TopicListFragment;
+import com.banxi1988.v2exgeek.model.Node;
+
+import org.antlr.v4.runtime.misc.NotNull;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    private static final String TAG = "MainActivity";
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -53,13 +60,21 @@ public class MainActivity extends AppCompatActivity
     public void onNavigationDrawerItemSelected(MenuItem menuItem) {
         // update the main content by replacing fragments
         Fragment fragment = fragmentByNavigationItem(menuItem);
+        showDetailFragment(fragment);
+    }
+
+    @Override
+    public void onNavigationDrawerNodeSelected(Node node) {
+        showDetailFragment(fragmentByNavigationNode(node));
+    }
+
+    private void showDetailFragment(Fragment fragment){
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
         }
-
     }
 
     @Nullable
@@ -67,10 +82,14 @@ public class MainActivity extends AppCompatActivity
         int itemId = menuItem.getItemId();
         if(itemId == R.id.navigation_item_hot){
             return TopicListFragment.newInstance(TopicListFragment.TOPIC_LIST_TYPE_HOT);
-        }else if(itemId == R.id.navigation_item_latest){
-            return TopicListFragment.newInstance(TopicListFragment.TOPIC_LIST_TYPE_LATEST);
+        }else if(itemId == R.id.navigation_item_all){
+            return TopicListFragment.newInstance(TopicListFragment.TOPIC_LIST_TYPE_ALL);
         }
         return  null;
+    }
+
+    private Fragment fragmentByNavigationNode(@NonNull Node node){
+        return TopicListFragment.newInstance(node);
     }
 
     public void onSectionAttached(int listType) {
@@ -78,12 +97,16 @@ public class MainActivity extends AppCompatActivity
             case TopicListFragment.TOPIC_LIST_TYPE_HOT:
                 mTitle = "热门";
                 break;
-            case TopicListFragment.TOPIC_LIST_TYPE_LATEST:
-                mTitle = "最新";
-                break;
             case TopicListFragment.TOPIC_LIST_TYPE_ALL:
                 mTitle = "全部";
                 break;
+        }
+    }
+
+    public void onNodeAttached(Node node){
+        Log.d(TAG, "onNodeAttached "+node);
+        if (node != null){
+            mTitle = node.title;
         }
     }
 

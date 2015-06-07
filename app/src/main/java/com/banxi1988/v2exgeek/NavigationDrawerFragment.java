@@ -1,5 +1,6 @@
 package com.banxi1988.v2exgeek;
 
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
@@ -22,6 +23,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.banxi1988.v2exgeek.controller.TopicListFragment;
+import com.banxi1988.v2exgeek.model.Node;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -58,6 +65,24 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = R.id.navigation_item_hot;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+
+    private static final List<Node> preselectNodeList  = new ArrayList<>();
+    static{
+        preselectNodeList.add(new Node(300,"programmer","程序员","//cdn.v2ex.co/navatar/94f6/d7e0/300_large.png?m=1433388951"));
+        preselectNodeList.add(new Node(13,"iDev","iDev","//cdn.v2ex.co/navatar/c51c/e410/13_large.png?m=1433389041"));
+        preselectNodeList.add(new Node(39,"android","Android","//cdn.v2ex.co/navatar/d67d/8ab4/39_large.png?m=1433389059"));
+        preselectNodeList.add(new Node(90,"python","Python","//cdn.v2ex.co/navatar/8613/985e/90_large.png?m=1433389127"));
+        preselectNodeList.add(new Node(17,"create","分享创造","//cdn.v2ex.co/navatar/70ef/df2e/17_large.png?m=1433388902"));
+        preselectNodeList.add(new Node(215,"design","设计","//cdn.v2ex.co/navatar/3b8a/6142/215_large.png?m=1433056985"));
+        preselectNodeList.add(new Node(519,"ideas","奇思妙想","//cdn.v2ex.co/navatar/6353/8fe6/519_large.png?m=1424694533"));
+        preselectNodeList.add(new Node(43,"jobs","酷工作","//cdn.v2ex.co/navatar/17e6/2166/43_large.png?m=1433389006"));
+        preselectNodeList.add(new Node(22,"macosx","Mac OS X","//cdn.v2ex.co/navatar/b6d7/67d2/22_large.png?m=1433389146"));
+        preselectNodeList.add(new Node(69,"all4all","二手交易","//cdn.v2ex.co/navatar/14bf/a6bb/69_large.png?m=1419268224"));
+        preselectNodeList.add(new Node(551,"free","免费赠送","//cdn.v2ex.co/navatar/7f24/d240/551_large.png?m=1431321114"));
+        preselectNodeList.add(new Node(12,"qna","问与答","//cdn.v2ex.co/navatar/c20a/d4d7/12_large.png?m=1433389079"));
+//        preselectNodeList.add(new Node(90,"","",""));
+//        preselectNodeList.add(new Node(90,"","",""));
+    }
 
     public NavigationDrawerFragment() {
     }
@@ -96,6 +121,9 @@ public class NavigationDrawerFragment extends Fragment {
                 return false;
             }
         });
+        for(Node node: preselectNodeList){
+            mNavigationView.getMenu().add(TopicListFragment.TOPIC_LIST_TYPE_NODE,(int)node.id,0,node.title);
+        }
         selectDefaultOrLastItem();
         return mNavigationView;
     }
@@ -193,8 +221,26 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(menuItem);
+            Node selectedNode = findNodeByMenuItem(menuItem);
+            if (selectedNode == null){
+                mCallbacks.onNavigationDrawerItemSelected(menuItem);
+            }else{
+                mCallbacks.onNavigationDrawerNodeSelected(selectedNode);
+            }
         }
+    }
+
+    @Nullable
+    private Node findNodeByMenuItem(MenuItem menuItem){
+        if(menuItem.getGroupId() == TopicListFragment.TOPIC_LIST_TYPE_NODE){
+            int itemId = menuItem.getItemId();
+            for(Node node : preselectNodeList){
+                if(node.id == itemId){
+                    return node;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -269,10 +315,14 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
-    public static interface NavigationDrawerCallbacks {
+    public  interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(MenuItem menuItem);
+
+        // Called when an node in the navigation drawer is selected
+        void onNavigationDrawerNodeSelected(Node node);
+
     }
 }

@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 public class Node implements Parcelable {
     public long id;
+    public String name;
     public String title;
     public String title_alternative;
     public String url;
@@ -15,6 +16,18 @@ public class Node implements Parcelable {
     public String avatar_mini;
     public String avatar_normal;
     public String avatar_large;
+
+    public String getAvatar(){
+        return "http:"+avatar_large;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "name='" + name + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 
     // Parcelable
 
@@ -26,6 +39,7 @@ public class Node implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.id);
+        dest.writeString(name);
         dest.writeString(this.title);
         dest.writeString(this.title_alternative);
         dest.writeString(this.url);
@@ -40,6 +54,7 @@ public class Node implements Parcelable {
 
     protected Node(Parcel in) {
         this.id = in.readLong();
+        this.name = in.readString();
         this.title = in.readString();
         this.title_alternative = in.readString();
         this.url = in.readString();
@@ -58,4 +73,12 @@ public class Node implements Parcelable {
             return new Node[size];
         }
     };
+
+    //preselectedNode
+    public Node(long id,String name,String title,String avatar_large){
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.avatar_large = avatar_large;
+    }
 }

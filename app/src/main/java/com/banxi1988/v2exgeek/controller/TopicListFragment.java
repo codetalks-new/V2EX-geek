@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -24,6 +25,7 @@ import com.banxi1988.v2exgeek.MainActivity;
 import com.banxi1988.v2exgeek.R;
 import com.banxi1988.v2exgeek.api.ApiServiceManager;
 import com.banxi1988.v2exgeek.databinding.TopicListItemDatabindingBinding;
+import com.banxi1988.v2exgeek.model.Node;
 import com.banxi1988.v2exgeek.model.Topic;
 import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
@@ -45,19 +47,21 @@ import retrofit.RetrofitError;
  */
 public class TopicListFragment extends Fragment {
     private static final String TAG = "TopicListFragment";
-    @IntDef({TOPIC_LIST_TYPE_HOT,TOPIC_LIST_TYPE_ALL,TOPIC_LIST_TYPE_LATEST})
+    @IntDef({TOPIC_LIST_TYPE_HOT,TOPIC_LIST_TYPE_ALL,TOPIC_LIST_TYPE_NODE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TopicListType{}
 
     public static final int TOPIC_LIST_TYPE_HOT = 0;
     public static final int TOPIC_LIST_TYPE_ALL = 1;
-    public static final int TOPIC_LIST_TYPE_LATEST = 2;
+    public static final int TOPIC_LIST_TYPE_NODE = 2;
 
 
     @TopicListType
     private int mTopicListType = TOPIC_LIST_TYPE_HOT;
-
     private static final String ARG_TOPIC_LIST_TYPE = "topic_list_type";
+    private static final String ARG_NODE = "node";
+    @Nullable
+    private Node mCurrentNode;
     private RecyclerView mRecyclerView;
     private TopicRecyclerAdapter mAdapter;
 
@@ -65,6 +69,15 @@ public class TopicListFragment extends Fragment {
         TopicListFragment fragment = new TopicListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_TOPIC_LIST_TYPE, typeId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static TopicListFragment newInstance(@NonNull Node node) {
+        TopicListFragment fragment = new TopicListFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_TOPIC_LIST_TYPE, TOPIC_LIST_TYPE_NODE);
+        args.putParcelable(ARG_NODE,node);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,6 +94,9 @@ public class TopicListFragment extends Fragment {
            if(args.containsKey(ARG_TOPIC_LIST_TYPE)){
                mTopicListType = args.getInt(ARG_TOPIC_LIST_TYPE);
            }
+            if(args.containsKey(ARG_NODE)){
+                mCurrentNode = args.getParcelable(ARG_NODE);
+            }
         }
         mAdapter = new TopicRecyclerAdapter(new ArrayList<Topic>(), new OnTopicViewClickLister() {
             @Override
@@ -119,8 +135,12 @@ public class TopicListFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_TOPIC_LIST_TYPE));
+        MainActivity main = (MainActivity)activity;
+        if(mCurrentNode != null){
+            main.onNodeAttached(mCurrentNode);
+        }else{
+            main.onSectionAttached(mTopicListType);
+        }
     }
 
     private String currentListScope(){
@@ -132,7 +152,29 @@ public class TopicListFragment extends Fragment {
     }
 
     private void loadTopicList(){
-        ApiServiceManager.v2exService().listTopicByScope(currentListScope(), new Callback<List<Topic>>() {
+        if (mCurrentNode == null) {
+            loadTopicListByScope(currentListScope());
+        }else{
+            loadTopicListByNode(mCurrentNode);
+        }
+    }
+
+    private void loadTopicListByNode(@NotNull Node node){
+        ApiServiceManager.v2exService().listTopicByNodeName(node.name, new Callback<List<Topic>>() {
+            @Override
+            public void success(List<Topic> topics, Response response) {
+               handleResponse(topics);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Toast.makeText(getActivity(),"请求失败",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void loadTopicListByScope(String scope){
+        ApiServiceManager.v2exService().listTopicByScope(scope, new Callback<List<Topic>>() {
             @Override
             public void success(List<Topic> topics, Response response) {
                 handleResponse(topics);
