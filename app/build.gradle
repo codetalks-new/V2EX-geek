@@ -34,7 +34,8 @@ dependencies {
     compile "com.android.support:cardview-v7:${rootProject.androidSupportLibVersion}"
     compile "com.android.support:recyclerview-v7:${rootProject.androidSupportLibVersion}"
     compile "com.android.support:design:${rootProject.androidSupportLibVersion}"
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+//    compile 'com.squareup.okhttp:logging-interceptor:2.5.0'
     compile 'com.alibaba:fastjson:1.1.45.android'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
