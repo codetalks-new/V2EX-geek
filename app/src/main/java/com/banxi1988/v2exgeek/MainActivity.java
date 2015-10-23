@@ -21,7 +21,6 @@ import android.support.v4.widget.DrawerLayout;
 import com.banxi1988.v2exgeek.controller.TopicListFragment;
 import com.banxi1988.v2exgeek.model.Node;
 
-import org.antlr.v4.runtime.misc.NotNull;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

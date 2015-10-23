@@ -6,6 +6,7 @@ import com.banxi1988.v2exgeek.model.Topic;
 
 import java.util.List;
 
+import retrofit.Call;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -17,18 +18,18 @@ import retrofit.http.Query;
 public interface V2exService {
 
     @GET("/topics/{scope}.json")
-    void listTopicByScope(@Path("scope") String scope, Callback<List<Topic>> cb);
+    Call<List<Topic>> listTopicByScope(@Path("scope") String scope);
 
     @GET("/topics/show.json")
-    void listTopicByNodeId(@Query("node_id") String nodeId,Callback<List<Topic>> cb);
+    Call<List<Topic>>  listTopicByNodeId(@Query("node_id") String nodeId);
 
     @GET("/topics/show.json")
-    void listTopicByNodeName(@Query("node_name") String nodeName,Callback<List<Topic>> cb);
+    Call<List<Topic>>  listTopicByNodeName(@Query("node_name") String nodeName);
 
     @GET("/topics/show.json")
-    void topicById(@Query("id") String id,Callback<Topic> cb);
+    Call<List<Topic>>  topicById(@Query("id") String id);
 
     @GET("/topics/replies/show.json")
-    void listReply(@Query("topic_id") long topicId,Callback<List<Reply>> cb);
+    Call<List<Reply>>  listReply(@Query("topic_id") long topicId);
 
 }

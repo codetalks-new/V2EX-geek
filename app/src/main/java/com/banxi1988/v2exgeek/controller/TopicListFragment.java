@@ -30,9 +30,8 @@ import com.banxi1988.v2exgeek.model.Topic;
 import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
-import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ import java.util.List;
 import java.util.Objects;
 
 import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit.Retrofit;
 
 /**
  * Created by banxi on 15/5/31.
@@ -111,7 +110,7 @@ public class TopicListFragment extends Fragment {
         });
     }
 
-    private void showTopicDetail(@NotNull Topic topic){
+    private void showTopicDetail(@NonNull Topic topic){
         Intent intent = new Intent(getActivity(),TopicDetailActivity.class);
         intent.putExtra(TopicDetailActivity.ARG_TOPIC,topic);
         startActivity(intent);
@@ -159,29 +158,31 @@ public class TopicListFragment extends Fragment {
         }
     }
 
-    private void loadTopicListByNode(@NotNull Node node){
-        ApiServiceManager.v2exService().listTopicByNodeName(node.name, new Callback<List<Topic>>() {
+    private void loadTopicListByNode(@NonNull Node node){
+        ApiServiceManager.v2exService().listTopicByNodeName(node.name).enqueue(new Callback<List<Topic>>() {
             @Override
-            public void success(List<Topic> topics, Response response) {
-               handleResponse(topics);
+            public void onResponse(retrofit.Response<List<Topic>> response, Retrofit retrofit) {
+                handleResponse(response.body());
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Throwable t) {
+                Log.e(TAG,t.getLocalizedMessage());
                 Toast.makeText(getActivity(),"请求失败",Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void loadTopicListByScope(String scope){
-        ApiServiceManager.v2exService().listTopicByScope(scope, new Callback<List<Topic>>() {
+        ApiServiceManager.v2exService().listTopicByScope(scope).enqueue(new Callback<List<Topic>>() {
             @Override
-            public void success(List<Topic> topics, Response response) {
-                handleResponse(topics);
+            public void onResponse(retrofit.Response<List<Topic>> response, Retrofit retrofit) {
+                handleResponse(response.body());
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Throwable t) {
+                Log.e(TAG,t.getLocalizedMessage());
                 Toast.makeText(getActivity(),"请求失败",Toast.LENGTH_LONG).show();
             }
         });
@@ -231,6 +232,7 @@ interface OnTopicViewClickLister{
 }
 
 class TopicRecyclerAdapter extends RecyclerView.Adapter<TopicViewHolder>{
+    private static final String TAG = "TopicRecyclerAdapter";
     private final List<Topic> topics;
     private OnTopicViewClickLister mTopicClickListener;
     public TopicRecyclerAdapter(List<Topic> topics){
@@ -246,6 +248,10 @@ class TopicRecyclerAdapter extends RecyclerView.Adapter<TopicViewHolder>{
     }
 
     public void updateTopics(List<Topic> topics){
+        if(topics == null || topics.isEmpty()){
+            Log.w(TAG,"topics is null or empty");
+            return;
+        }
         this.topics.clear();
         this.topics.addAll(topics);
         notifyDataSetChanged();

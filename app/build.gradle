@@ -2,19 +2,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.android.databinding'
 
 android {
-    compileSdkVersion 22 // "android-MNC"
-    buildToolsVersion "22.0.1" //"23 rc1" //"22.0.1"
+    compileSdkVersion 23 // "android-MNC"
+    buildToolsVersion "23.0.1" //"23 rc1" //"22.0.1"
 
     defaultConfig {
         applicationId "com.banxi1988.v2exgeek"
         minSdkVersion 19
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
-    buildTypes {
+    buildTypes.with{
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,16 +29,15 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-annotations:22.2.0'
-    compile 'com.android.support:support-v4:22.2.0'
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:cardview-v7:22.2.0'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.android.support:design:22.2.0'
+    compile "com.android.support:support-annotations:${rootProject.androidSupportLibVersion}"
+    compile "com.android.support:appcompat-v7:${rootProject.androidSupportLibVersion}"
+    compile "com.android.support:cardview-v7:${rootProject.androidSupportLibVersion}"
+    compile "com.android.support:recyclerview-v7:${rootProject.androidSupportLibVersion}"
+    compile "com.android.support:design:${rootProject.androidSupportLibVersion}"
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.alibaba:fastjson:1.1.45.android'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-SNAPSHOT'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:1.3.0'
 }
