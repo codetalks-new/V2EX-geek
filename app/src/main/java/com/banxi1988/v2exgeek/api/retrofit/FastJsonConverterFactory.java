@@ -1,5 +1,7 @@
 package com.banxi1988.v2exgeek.api.retrofit;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.parser.Feature;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
@@ -24,19 +26,11 @@ public class FastJsonConverterFactory extends Converter.Factory {
 
     @Override
     public Converter<?, RequestBody> toRequestBody(Type type, Annotation[] annotations) {
-        if(!(type instanceof Class)){
-            return null;
-        }
-        Class<?> cls = (Class<?>)type;
         return new FastJsonRequestBodyConverter<>();
     }
 
     @Override
     public Converter<ResponseBody, ?> fromResponseBody(Type type, Annotation[] annotations) {
-        if(!(type instanceof Class)){
-            return null;
-        }
-        Class<?> cls = (Class<?>)type;
-        return new FastJsonResponseBodyConverter<>(cls,features);
+        return new FastJsonResponseBodyConverter<>(type,features);
     }
 }

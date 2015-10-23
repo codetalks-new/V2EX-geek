@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 import retrofit.Converter;
@@ -17,11 +18,11 @@ import retrofit.Converter;
  * Created by banxi on 15/10/23.
  */
 public class FastJsonResponseBodyConverter<T> implements Converter<ResponseBody,T> {
-    private final Class<T> cls;
+    private final Type type;
     private final Feature [] features;
 
-    FastJsonResponseBodyConverter(Class<T> cls,Feature... features){
-        this.cls = cls;
+    FastJsonResponseBodyConverter(Type type,Feature... features){
+        this.type = type;
         this.features = features;
     }
 
@@ -30,7 +31,7 @@ public class FastJsonResponseBodyConverter<T> implements Converter<ResponseBody,
         Reader is = value.charStream();
         try {
             String text = readfully(is);
-            return JSON.parseObject(text,cls,features);
+            return JSON.parseObject(text,type,features);
         } finally {
             try {
                 is.close();
