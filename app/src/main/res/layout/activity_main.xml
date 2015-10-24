@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    tools:context=".controller.MainActivity">
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
@@ -38,7 +38,7 @@
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="com.banxi1988.v2exgeek.NavigationDrawerFragment"
+        android:name="com.banxi1988.v2exgeek.controller.NavigationDrawerFragment"
         tools:layout="@layout/fragment_navigation_drawer" />
 
 

@@ -1,45 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
     <data>
         <variable name="topic" type="com.banxi1988.v2exgeek.model.Topic"/>
     </data>
-    <LinearLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
+        android:paddingTop="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="4dp"
         >
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="4dp"
-            app:contentPadding="8dp"
+            app:contentPadding="12dp"
             >
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:orientation="horizontal"
                 android:layout_height="wrap_content">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/avatar_size"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
+                    tools:src="@drawable/avatar"
                     android:layout_height="@dimen/avatar_size" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/topic_title"
+                        tools:text="Android 开发者的第一个 iOS 程序，提交等到心碎"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|top"
+                        android:gravity="start|top"
+                        android:maxLines="2"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:text="@{topic.title}"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:showDividers="middle"
+                        android:layout_marginTop="4dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/node_name"
+                            android:text="@{topic.node.title}"
+                            android:layout_gravity="bottom"
+                            tools:text="Android"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_gravity="bottom"
+                            android:id="@+id/author_name"
+                            android:text="@{topic.member.username}"
+                            tools:text="banxi1988"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="8dp"
+                            android:id="@+id/last_reply_time"
+                            android:text="@{topic.lastModifiedTime}"
+                            tools:text="11 小时 5 分钟前 "
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:visibility="gone"
+                            android:id="@+id/last_reply_author_name"
+                            tools:text="banxi1988"
+                            />
+                    </LinearLayout>
 
+                </LinearLayout>
                 <TextView
-                    android:layout_toRightOf="@id/avatar"
-                    android:layout_marginLeft="8dp"
-                    android:id="@+id/title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:text="@{topic.title}"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:background="@drawable/replies_round_rect_bg"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+                    android:layout_gravity="center_vertical"
+                    android:text="@{String.valueOf(topic.replies)}"
+                    tools:text="139"
                     />
-
-            </RelativeLayout>
+            </LinearLayout>
         </android.support.v7.widget.CardView>
-    </LinearLayout>
+    </FrameLayout>
 </layout>

@@ -27,6 +27,14 @@ public class Topic implements Parcelable {
         return DateUtils.getRelativeTimeSpanString(created * 1000);
     }
 
+    public CharSequence getLastModifiedTime(){
+        return DateUtils.getRelativeTimeSpanString(last_modified * 1000);
+    }
+
+    public CharSequence getLastTouchedTime(){
+        return DateUtils.getRelativeTimeSpanString(last_touched * 1000);
+    }
+
     @Override
     public String toString() {
         return "Topic{" +
