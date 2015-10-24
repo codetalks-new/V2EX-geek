@@ -1,4 +1,4 @@
-package com.banxi1988.v2exgeek;
+package com.banxi1988.v2exgeek.controller;
 
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.banxi1988.v2exgeek.R;
 import com.banxi1988.v2exgeek.controller.TopicListFragment;
 import com.banxi1988.v2exgeek.model.Node;
 

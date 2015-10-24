@@ -1,42 +1,32 @@
 package com.banxi1988.v2exgeek.controller;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.banxi1988.v2exgeek.MainActivity;
 import com.banxi1988.v2exgeek.R;
 import com.banxi1988.v2exgeek.api.ApiServiceManager;
-import com.banxi1988.v2exgeek.databinding.TopicListItemDatabindingBinding;
+import com.banxi1988.v2exgeek.controller.adapter.TopicRecyclerAdapter;
+import com.banxi1988.v2exgeek.controller.listener.OnTopicViewClickLister;
 import com.banxi1988.v2exgeek.model.Node;
 import com.banxi1988.v2exgeek.model.Topic;
-import com.squareup.okhttp.Response;
-import com.squareup.picasso.Picasso;
 
 
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit.Callback;
 import retrofit.Retrofit;
@@ -122,11 +112,10 @@ public class TopicListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.topic_list_fragment,container,false );
 
         mRecyclerView = (RecyclerView)rootView;
-        mRecyclerView.setAdapter(mAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
-
+        mRecyclerView.setAdapter(mAdapter);
         loadTopicList();
         return rootView;
     }
@@ -193,89 +182,4 @@ public class TopicListFragment extends Fragment {
 
     }
 }
-class TopicViewHolder extends RecyclerView.ViewHolder{
-    private TopicListItemDatabindingBinding mBinding;
-    private OnTopicViewClickLister mTopicClickListener;
-    private View.OnClickListener mInnerOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if(mTopicClickListener == null && mBinding.getTopic() != null){
-                return;
-            }
-            if(v == mBinding.avatar){
-               mTopicClickListener.onClickAvatar(mBinding.getTopic());
-            }else{
-                mTopicClickListener.onClickTopic(mBinding.getTopic());
-            }
-        }
-    };
-    public TopicViewHolder(TopicListItemDatabindingBinding binding,OnTopicViewClickLister clickLister) {
-        super(binding.getRoot());
-        mBinding = binding;
-        mTopicClickListener = clickLister;
-        if(clickLister != null){
-            binding.getRoot().setOnClickListener(mInnerOnClickListener);
-            binding.avatar.setOnClickListener(mInnerOnClickListener);
-        }
-    }
 
-    public void bind(Topic topic){
-        mBinding.setTopic(topic);
-        Context ctx = mBinding.avatar.getContext();
-        Picasso.with(ctx).load(topic.member.getAvatar()).into(mBinding.avatar);
-    }
-}
-
-interface OnTopicViewClickLister{
-     void onClickAvatar(Topic topic);
-    void onClickTopic(Topic topic);
-}
-
-class TopicRecyclerAdapter extends RecyclerView.Adapter<TopicViewHolder>{
-    private static final String TAG = "TopicRecyclerAdapter";
-    private final List<Topic> topics;
-    private OnTopicViewClickLister mTopicClickListener;
-    public TopicRecyclerAdapter(List<Topic> topics){
-       this(topics,null);
-    }
-    public TopicRecyclerAdapter(List<Topic> topics,OnTopicViewClickLister clickLister){
-       this.topics = topics;
-        mTopicClickListener = clickLister;
-    }
-
-    public void setOnTopicClickListener(OnTopicViewClickLister listener){
-        mTopicClickListener = listener;
-    }
-
-    public void updateTopics(List<Topic> topics){
-        if(topics == null || topics.isEmpty()){
-            Log.w(TAG,"topics is null or empty");
-            return;
-        }
-        this.topics.clear();
-        this.topics.addAll(topics);
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public TopicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        TopicListItemDatabindingBinding binding = TopicListItemDatabindingBinding.inflate(inflater);
-        return  new TopicViewHolder(binding,mTopicClickListener);
-    }
-
-
-    @Override
-    public void onBindViewHolder(TopicViewHolder holder, int position) {
-        holder.bind(topicAtPosition(position));
-    }
-
-
-    public Topic topicAtPosition(int position){
-        return topics.get(position);
-    }
-    @Override
-    public int getItemCount() {
-        return topics.size();
-    }
-}
